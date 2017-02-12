@@ -4,7 +4,7 @@
 # Usage
 First configure your Go environment, and then install `autoannex`.
 
-    $ go get https://github.com/hypoactiv/autoannex
+    $ go get github.com/hypoactiv/autoannex
 
 If you haven't already, create a `git-annex` repository.
 
