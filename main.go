@@ -105,7 +105,13 @@ func findSshRepos(uuid UuidValue) (sshRepos []string) {
 		go func(host string) {
 			defer wg.Done()
 			fmt.Println("Looking for repos on", host)
-			sshDirsigOut, err := sh.Command("ssh", host, "autoannex", "sig", "find", "--uuid", string(uuid), "--sig-file", *appSigFilename, "-d", *appDepth).Output()
+			sshDirsigOut, err := sh.Command(
+				"ssh", host,
+				"autoannex", "sig", "find",
+				"--uuid", string(uuid),
+				"--sig-file", *appSigFilename,
+				"-d", strconv.FormatUint(uint64(*appDepth), 10),
+			).Output()
 			if err != nil {
 				fmt.Println("Error looking for repos on", host)
 				fmt.Println(string(sshDirsigOut))
@@ -115,6 +121,7 @@ func findSshRepos(uuid UuidValue) (sshRepos []string) {
 			err = yaml.Unmarshal(sshDirsigOut, g)
 			if err != nil {
 				fmt.Println("Error parsing SSH host output from", host, "\n", err)
+				fmt.Println(string(sshDirsigOut))
 				return
 			}
 			repos := g[string(uuid)]
